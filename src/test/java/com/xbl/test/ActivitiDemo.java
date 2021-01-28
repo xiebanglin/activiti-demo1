@@ -173,4 +173,17 @@ public class ActivitiDemo {
         }
 
     }
+
+    /**
+     * 删除部署
+     */
+    @Test
+    public void deleteDepolyment() {
+
+        // 获取流程引擎
+
+        // 通过引擎来获取repositoryService
+        // 通过部署id来删除流程部署信息
+
+    }
 }
