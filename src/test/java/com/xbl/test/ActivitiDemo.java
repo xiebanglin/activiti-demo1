@@ -3,6 +3,8 @@ package com.xbl.test;
 import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.junit.Test;
@@ -35,7 +37,20 @@ public class ActivitiDemo {
 
     /**
      * 启动流程实例
+     * <p>
+     * `act_hi actinst'流程实例执行历史信息
+     * "act_hiidntitylink`流程参与用户的历史信息
+     * `act_hiprocinst`
+     * 流程实例的历史信息
+     * `act_hi_taskinst`
+     * 流程任务的历史信息
+     * "act_ru_execution`
+     * 流程执行信息
+     * * `act_ru_identitylink·―流程的正在参与用户信息
+     * 'act_ru_task
+     * 流程当前任务信息
      */
+
     @Test
     public void testStartProcess() {
 
@@ -126,5 +141,36 @@ public class ActivitiDemo {
 
         System.out.println("流程部署的ID" + deploy.getId());
         System.out.println("流程部署的名字" + deploy.getName());
+    }
+
+    /**
+     * 查询流程定义
+     */
+    @Test
+    public void queryProcessDefinition() {
+        // 获取流程引擎
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        // 获取RepositiryService
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        // 获取ProcessDefinitionQuery对象
+        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
+        // 查询当前所有的流程定义
+        // processDefinitionKey根据流程定义key查询
+        // orderByProcessDefinitionVersion根据version倒序排序
+        // list查所有的内容
+        List<ProcessDefinition> list = processDefinitionQuery
+                .processDefinitionKey("myEvection")
+                .orderByProcessDefinitionVersion()
+                .desc()
+                .list();
+        // 输出
+        for (ProcessDefinition processDefinition : list) {
+            System.out.println("流程定义的id:" + processDefinition.getId());
+            System.out.println("流程定义的名称:" + processDefinition.getName());
+            System.out.println("流程定义的key:" + processDefinition.getKey());
+            System.out.println("流程定义的版本:" + processDefinition.getVersion());
+
+        }
+
     }
 }
