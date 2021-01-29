@@ -181,7 +181,7 @@ public class ActivitiDemo {
     public void deleteDepolyment() {
 
         // 获取流程引擎
-
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         // 通过引擎来获取repositoryService
         // 通过部署id来删除流程部署信息
 
