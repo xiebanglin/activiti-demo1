@@ -2,14 +2,14 @@ package com.xbl.test;
 
 import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
@@ -169,6 +169,7 @@ public class ActivitiDemo {
             System.out.println("流程定义的名称:" + processDefinition.getName());
             System.out.println("流程定义的key:" + processDefinition.getKey());
             System.out.println("流程定义的版本:" + processDefinition.getVersion());
+            System.out.println("流程部署id:" + processDefinition.getDeploymentId());
 
         }
 
@@ -176,14 +177,65 @@ public class ActivitiDemo {
 
     /**
      * 删除部署
+     * <p>
+     * 当前的流程如果并没有完成，想要删除的话，需要使用特殊方式，原理就是级联删除
      */
     @Test
     public void deleteDepolyment() {
 
+        String deploymentId = "2501";
         // 获取流程引擎
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
-        // 通过引擎来获取repositoryService
+        // 通过引擎来获取RepositoryService
+        RepositoryService repositoryService = processEngine.getRepositoryService();
         // 通过部署id来删除流程部署信息
+//        repositoryService.deleteDeployment(deploymentId);
+        // 级联删除
+        repositoryService.deleteDeployment(deploymentId, true);
+    }
 
+    /**
+     * 获下载资源文件
+     * 方案一：使用activiti提供的api来资源文件,保存到文件目录
+     * 方案二：自己写代码从数据库下载文件，使用jdbc对blob 类型或者clob读取出来，保存到文件目录
+     * 解决io操作：commons-io.jar
+     * <p>
+     * 使用方案一：RepositoryService
+     */
+    @Test
+    public void getDeployment() throws IOException {
+
+        // 获取流程引擎
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        // 获取RepositoryService
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+        // 获取查询对象ProcessDefinitionQuery, 查询流程定义信息
+        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
+        ProcessDefinition processDefinition = processDefinitionQuery.processDefinitionKey("myEvection")
+                .singleResult();
+        // 通过流程定义信息获取部署id
+        String deploymentId = processDefinition.getDeploymentId();
+        // 通过ProcessDefinitionQuery，传递部署id参数，读取资源信息(png 和 bpmn 文件)
+        // 获取png图片的流
+        // 从流程定义表获取png文件目录和名字
+        String pngName = processDefinition.getDiagramResourceName();
+        // 通过部署id和图片名字获取资源
+        InputStream pngInput = repositoryService.getResourceAsStream(deploymentId, pngName);
+        // 获取bpmn文件的流
+        String bpmnName = processDefinition.getResourceName();
+        InputStream bpmnInput = repositoryService.getResourceAsStream(deploymentId, bpmnName);
+        // 构造OutputStream 流
+        File pngFile = new File("D:/activitiFlowFile/evection.png");
+        File bpmnFile = new File("D:/activitiFlowFile/evection.bpmn");
+        FileOutputStream pngOutput = new FileOutputStream(pngFile);
+        FileOutputStream bpmnOutput = new FileOutputStream(bpmnFile);
+        // 输入流和输出流的转换
+        IOUtils.copy(pngInput, pngOutput);
+        IOUtils.copy(bpmnInput, bpmnOutput);
+        // 关闭流
+        pngOutput.close();
+        bpmnOutput.close();
+        pngInput.close();
+        bpmnInput.close();
     }
 }
