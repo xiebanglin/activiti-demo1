@@ -1,6 +1,8 @@
 package com.xbl.test;
 
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricActivityInstanceQuery;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -99,7 +101,7 @@ public class ActivitiDemo {
         // 2、获取TaskService
         TaskService taskService = processEngine.getTaskService();
         // 3、根据任务id完成任务(完成张三的任务)
-//        taskService.complete("5005");
+//        taskService.complete("12505");
 // 获取jerry - myEvection对应的任务
 //        Task task = taskService.createTaskQuery().processDefinitionKey("myEvection")
 //                .taskAssignee("jerry").singleResult();
@@ -237,5 +239,37 @@ public class ActivitiDemo {
         bpmnOutput.close();
         pngInput.close();
         bpmnInput.close();
+    }
+
+    /**
+     * 历史记录查询
+     */
+    @Test
+    public void findHistoryInfo() {
+
+        // 获取流程引擎
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        // 获取HistoryService
+        HistoryService historyService = processEngine.getHistoryService();
+        // 获取actinst表的查询对象
+        HistoricActivityInstanceQuery activityInstanceQuery = historyService.createHistoricActivityInstanceQuery();
+        // 查询actinst表,条件
+        // 根据InstanceId
+//        activityInstanceQuery.processInstanceId("12501");
+        // 根据DefinitionId
+        activityInstanceQuery.processDefinitionId("myEvection:1:7504");
+        // 排序
+        activityInstanceQuery.orderByHistoricActivityInstanceStartTime().asc();
+        // 查询所以内容
+        List<HistoricActivityInstance> list = activityInstanceQuery.list();
+        // 输出
+        for (HistoricActivityInstance hi : list) {
+            System.out.println(hi.getActivityId());
+            System.out.println(hi.getActivityName());
+            System.out.println(hi.getProcessDefinitionId());
+            System.out.println(hi.getProcessInstanceId());
+            System.out.println("------------------------------");
+        }
+
     }
 }
