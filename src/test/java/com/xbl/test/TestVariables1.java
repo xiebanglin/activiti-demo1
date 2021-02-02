@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 流程变量
  */
-public class TestVariables {
+public class TestVariables1 {
 
     /**
      * 测试流程部署
@@ -50,14 +50,14 @@ public class TestVariables {
         Map<String, Object> variables = new HashMap<>();
         // 设置流程变量
         Evection evection = new Evection();
-        evection.setNum(2d);
+        evection.setNum(3d);
         // 流程变量的实体类放入map
         variables.put("evection", evection);
         // 设定任务负责人
-        variables.put("assignee0", "李四");
-        variables.put("assignee1", "王经理");
-        variables.put("assignee2", "杨总经理");
-        variables.put("assignee3", "张财务");
+        variables.put("assignee0", "李四1");
+        variables.put("assignee1", "王经理1");
+        variables.put("assignee2", "杨总经理1");
+        variables.put("assignee3", "张财务1");
         // 根据流程定义的id启动流程
         ProcessInstance instance = runtimeService.startProcessInstanceByKey("evection-global", variables);
         // 输出内容
@@ -77,7 +77,7 @@ public class TestVariables {
         TaskService taskService = processEngine.getTaskService();
 
         // 任务负责人
-        String assignee = "张财务";
+        String assignee = "张财务1";
         // 完成任务
         Task task = taskService.createTaskQuery()
                 .processDefinitionKey("evection-global")

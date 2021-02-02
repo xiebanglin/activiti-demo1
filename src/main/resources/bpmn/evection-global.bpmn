@@ -2,12 +2,12 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1612185729755" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <process id="evection-global" isClosed="false" isExecutable="true" processType="None">
     <startEvent id="_2" name="StartEvent"/>
-    <userTask activiti:exclusive="true" id="_3" name="创建出差申请"/>
+    <userTask activiti:assignee="${assignee0}" activiti:exclusive="true" id="_3" name="创建出差申请"/>
     <sequenceFlow id="_4" sourceRef="_2" targetRef="_3"/>
-    <userTask activiti:exclusive="true" id="_5" name="部门经理审核"/>
+    <userTask activiti:assignee="${assignee1}" activiti:exclusive="true" id="_5" name="部门经理审核"/>
     <sequenceFlow id="_6" sourceRef="_3" targetRef="_5"/>
-    <userTask activiti:exclusive="true" id="_7" name="总经理审批"/>
-    <userTask activiti:exclusive="true" id="_8" name="财务审批"/>
+    <userTask activiti:assignee="${assignee2}" activiti:exclusive="true" id="_7" name="总经理审批"/>
+    <userTask activiti:assignee="${assignee3}" activiti:exclusive="true" id="_8" name="财务审批"/>
     <endEvent id="_9" name="EndEvent"/>
     <sequenceFlow id="_10" sourceRef="_8" targetRef="_9"/>
     <sequenceFlow id="_11" sourceRef="_7" targetRef="_8"/>
